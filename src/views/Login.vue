@@ -4,7 +4,7 @@
         class="login-form"
         label-position="top" 
         label-width="80px" 
-        :model="fromData">
+        :model="formData">
          <h2>用户登录</h2>
         <el-form-item label="用户名">
             <el-input v-model="formData.username"></el-input>
@@ -36,13 +36,17 @@ export default{
         //  async handleLogin(){
         //      var response = await axios.post('http://localhost:8888/api/private/v1/login',this.formData);
             //上面登录绑定该登陆事件
-            handleLogin(){
-                axios.post('http://localhost:8888/api/private/v1/login',this.formData)
-                .then((response)=>{
+           async handleLogin(){
+                var response =await axios.post('http://localhost:8888/api/private/v1/login',this.formData)
+              
                     //判断登陆是否成功
-                    var status = response.data.meta.status;
-                    //定义返回的msg信息
-                    var msg = response.data.meta.msg;
+                    // var status = response.data.meta.status;
+                    // //定义返回的msg信息
+                    // var msg = response.data.meta.msg;
+
+                    //通过es6解构对象
+                    var {data:{meta:{status,msg}}}=response;
+
                     if(status===200){
                         //登录成功
                         //提示
@@ -53,17 +57,13 @@ export default{
                                 //存下来 ('名字'，值)
                         SessionStorage.setItem('token',token);
                          //跳转到后台首页
-                        
+
                     }else{
                         //登录失败 
                         //做提示
                          this.$message.error(msg);
 
                     }
-                })
-                .catch((err)=>{
-
-                })
             }
          }
 
