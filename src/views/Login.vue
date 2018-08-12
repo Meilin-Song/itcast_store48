@@ -20,8 +20,7 @@
     </div>
 </template>
 <script>
-//导入axios模块
-import axios from 'axios';
+
 export default{
      data() {
          return{
@@ -37,7 +36,7 @@ export default{
         //      var response = await axios.post('http://localhost:8888/api/private/v1/login',this.formData);
             //上面登录绑定该登陆事件
            async handleLogin(){
-                var response =await axios.post('http://localhost:8888/api/private/v1/login',this.formData)
+                var response =await this.$http.post('login',this.formData)
               
                     //判断登陆是否成功
                     // var status = response.data.meta.status;

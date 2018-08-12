@@ -96,17 +96,41 @@
             </el-table-column>
             
     </el-table>
+
+    <!-- 分页 
+    page-count  总页数
+    pager-count 页码按钮的数量，当总页数超过该值时会折叠
+    layout 布局  里面是功能  固定的参数写法 不需要可以去掉
+    -->
+    <!-- 绑定data中的数据 -->
+    <el-pagination
+        @size-change="handleSizeChange"  
+        @current-change="handleCurrentChange"
+        :page-sizes="[2, 4, 6, 8]"   
+        layout="total, sizes, prev, pager, next, jumper"
+        :page-size="pagesize"
+        :current-page="pagenum"
+        :pager-count="9"
+        :total="count"
+        >
+    </el-pagination>
+    
     </el-card>
 </template>
 <script>
-    import axios from 'axios';
+   
 
     export default {
         data() {
              return {
+                 //表格渲染数据
                  data:[],
-                 value1: true,
-                 value2: true
+
+                 //分页数据
+                 pagenum:1, //页码  默认
+                 pagesize:2,  //每页多少条  默认
+                 count:0 //总数 默认0条
+               
              }
 
         },
@@ -118,10 +142,10 @@
             async loadData(){
                   //请求数据的时候 在请求头 添加Authorization=token  带上token
                  var token = sessionStorage.getItem('token');
-                axios.defaults.headers.common['Authorization'] = token;
+                this.$http.defaults.headers.common['Authorization'] = token;
                 
                 //发送请求
-                var response = await axios.get('http://localhost:8888/api/private/v1/users?pagenum=1&pagesize=10');
+                var response = await this.$http.get(`users?pagenum=${this.pagenum}&pagesize=${this.pagesize}`);
                 // console.log(response);
                 
               
@@ -132,8 +156,13 @@
                 var {meta:{status,msg}} = response.data;
                 // console.log(status)
                 if(status===200){
-                    //获取成功 展示列表
+                    //获取成功 展示列 表
                     this.data =response.data.data.users;
+                    //总数
+                    this.count = response.data.data.total;
+                    //每页条数
+                   
+
                     // console.log(this.data)
 
                 }else{
@@ -142,6 +171,17 @@
                 }
                 
 
+            },
+            //分页的方法
+            handleSizeChange(val) {
+                //当前每页显示数量
+                this.pagesize = val;
+                this.loadData();
+            },
+            handleCurrentChange(val) {
+                //val是当前页码
+                this.pagenum = val;
+                this.loadData();
             }
           
          }
