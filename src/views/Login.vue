@@ -55,8 +55,9 @@ export default{
                                  // token是后台响应回来的数据中 带着，拿出来就行
                          var token = response.data.data.token;
                                 //存下来 ('名字'，值)
-                        SessionStorage.setItem('token',token);
-                         //跳转到后台首页
+                        sessionStorage.setItem('token',token);
+                         //跳转到后台首页  
+                        this.$router.push('/');
 
                     }else{
                         //登录失败 

@@ -10,7 +10,7 @@
                     <span>电商后台管理系统</span>
                 </el-col>
                 <el-col :span="1" class="logout">
-                    <a href="#">退出</a>
+                    <a @click.prevent="handleOut" href="#">退出</a>
                 </el-col>
             </el-row>
         </el-header>
@@ -73,12 +73,44 @@
                     </el-submenu>
                     </el-menu>
             </el-aside>
-            <el-main class="main">Main</el-main>
+            <el-main class="main">
+                <!-- 路由占位符 路由组件渲染这个页面 -->
+                <router-view></router-view>
+            </el-main>
         </el-container>
     </el-container>
 </template>
 <script>
     export default{
+        //在页面加载之前，就必须判断登录页面跳过来的有没有带token
+        beforeCreate(){
+                //取token
+                var token = sessionStorage.getItem('token');
+                //判断 （前端无法判断token的值，只能判断是否存在，只有后端才能判断token值）
+                if(!token){
+                    //给出警告提示框
+                    this.$message.warning('请先登录');
+                    //token不存在  跳回登录页面
+                    this.$router.push('/login');
+                }
+        },
+        methods:{
+            handleOut(){
+                //提示框
+                this.$message.success('退出成功');
+                //清除token
+                // sessionStorage.removeItem('token');//只移除这一个
+                sessionStorage.clear(); //clear强力清除
+                //跳转到登录页面
+                this.$router.push('/login')
+
+            }
+
+        }
+
+
+
+
 
     }
 
