@@ -1,11 +1,8 @@
 <template>
     <el-card class="card">
         <!-- //面包屑导航 -->
-        <el-breadcrumb separator-class="el-icon-arrow-right">
-            <el-breadcrumb-item :to="{ path: '/' }">首页</el-breadcrumb-item>
-            <el-breadcrumb-item>用户管理</el-breadcrumb-item>
-            <el-breadcrumb-item>用户列表</el-breadcrumb-item>
-        </el-breadcrumb>
+         <my-breadcrumb level1="用户管理" level2="用户列表"></my-breadcrumb>
+        
             <!-- 输入框 -->
         <el-row class="searchRow">
             <el-col :span="24">
@@ -237,6 +234,7 @@
                 label="请选择" 
                 :value="-1" 
                 disabled></el-option>
+                <!-- 渲染下拉框的选项数据 -->
                 <el-option 
                 v-for="item in roles"
                 :key="item.id"

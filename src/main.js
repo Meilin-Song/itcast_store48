@@ -18,10 +18,16 @@ import '@/assets/css/index.css';
 import moment from 'moment';
 import myaxios from '@/plugins/MyAxios';
 
+//导入面包屑组件 全局是因为所有页面都有面包屑导航
+import MyBreadcrumb from '@/components/MyBreadcrumb';
+
 
 //注册插件  表示vue实例可以用这些插件的方法
 Vue.use(ElementUI);
 Vue.use(myaxios);
+
+//注册面包屑 全局组件
+Vue.component(MyBreadcrumb.name,MyBreadcrumb);
 
 //写一个全局的时间过滤器
 // 必须有一个参数 使用的时候自动传参
@@ -29,9 +35,7 @@ Vue.filter('fmtDate', function (value, fmtString) {
   return moment(value).format(fmtString);
 });
 
-//配置请求的基地址
-
-//配置全局的axios
+//
 
 
 
