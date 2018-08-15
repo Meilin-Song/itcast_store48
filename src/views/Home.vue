@@ -32,44 +32,19 @@
                     default-active="/users"
                     unique-opened
                     router >
-                    <el-submenu index="1">
+                    <el-submenu 
+                        v-for="item in menus"
+                        :key="item.id"
+                        :index="item.id">
                         <template slot="title">
                             <i class="el-icon-location"></i>
-                            <span>用户管理</span>
+                            <span>{{item.authName}}</span>
                         </template>
-                            <el-menu-item index="/users" class="el-icon-menu">&nbsp;&nbsp;用户列表</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="2">
-                        <template slot="title">
-                            <i class="el-icon-location"></i>
-                          <span slot="title">权限管理</span>
-                        </template>
-                        <el-menu-item index="/roles" class="el-icon-menu">&nbsp;&nbsp;角色管理</el-menu-item>
-                        <el-menu-item index="/rights" class="el-icon-menu">&nbsp;&nbsp;权限列表</el-menu-item>
-
-                    </el-submenu>
-                    <el-submenu index="3">
-                         <template slot="title">
-                            <i class="el-icon-location"></i>
-                          <span slot="title">商品管理</span>
-                        </template>
-                         <el-menu-item index="3-1" class="el-icon-menu">&nbsp;&nbsp;商品列表</el-menu-item>
-                          <el-menu-item index="3-2" class="el-icon-menu">&nbsp;&nbsp;分类参数</el-menu-item>
-                           <el-menu-item index="3-3" class="el-icon-menu">&nbsp;&nbsp;商品分类</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="4">
-                         <template slot="title">
-                            <i class="el-icon-location"></i>
-                          <span slot="title">订单管理</span>
-                        </template>
-                         <el-menu-item index="4-1" class="el-icon-menu">&nbsp;&nbsp;订单列表</el-menu-item>
-                    </el-submenu>
-                    <el-submenu index="5">
-                         <template slot="title">
-                            <i class="el-icon-location"></i>
-                          <span slot="title">数据统计</span>
-                        </template>
-                         <el-menu-item index="5-1" class="el-icon-menu">&nbsp;&nbsp;数据报表</el-menu-item>
+                            <el-menu-item 
+                            v-for="item1 in item.children"
+                            :key="item1.id"
+                            :index="'/'+ item1.path" 
+                            class="el-icon-menu">&nbsp;&nbsp;{{item1.authName}}</el-menu-item>
                     </el-submenu>
                     </el-menu>
             </el-aside>
@@ -82,17 +57,26 @@
 </template>
 <script>
     export default{
+        data(){
+            return {
+                menus:[]   //准备菜单的数组
+            }
+            
+        },
         //在页面加载之前，就必须判断登录页面跳过来的有没有带token
-        beforeCreate(){
-                //取token
-                var token = sessionStorage.getItem('token');
-                //判断 （前端无法判断token的值，只能判断是否存在，只有后端才能判断token值）
-                if(!token){
-                    //给出警告提示框
-                    this.$message.warning('请先登录');
-                    //token不存在  跳回登录页面
-                    this.$router.push('/login');
-                }
+        // beforeCreate(){
+        //         //取token
+        //         var token = sessionStorage.getItem('token');
+        //         //判断 （前端无法判断token的值，只能判断是否存在，只有后端才能判断token值）
+        //         if(!token){
+        //             //给出警告提示框
+        //             this.$message.warning('请先登录');
+        //             //token不存在  跳回登录页面
+        //             this.$router.push('/login');
+        //         }
+        // },
+        created(){
+            this. loadMenus();
         },
         methods:{
             handleOut(){
@@ -103,6 +87,14 @@
                 sessionStorage.clear(); //clear强力清除
                 //跳转到登录页面
                 this.$router.push('/login')
+
+            },
+            //加载菜单
+            async loadMenus(){
+                const response = await this.$http.get('menus');
+
+                //此处省略判断status状态的常规操作
+                this.menus = response.data.data;
 
             }
 
